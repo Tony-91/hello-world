@@ -1,7 +1,7 @@
 <form action="action_page.php">
   <div class="container">
     <h1>CHECKING 4 AUTOMATION - final CD CHECK</h1>
-    <p>CHECKING FOR CD.</p>
+    <p>CHECKING FOR playbook here.</p>
     <hr>
      
     <label for="Name"><b>Enter Name</b></label>
