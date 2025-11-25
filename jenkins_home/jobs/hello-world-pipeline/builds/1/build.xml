@@ -1,5 +1,5 @@
 <?xml version='1.1' encoding='UTF-8'?>
-<build>
+<flow-build plugin="workflow-job@1436.vfa_244484591f">
   <actions>
     <hudson.model.CauseAction>
       <causeBag class="linked-hash-map">
@@ -9,19 +9,72 @@
         </entry>
       </causeBag>
     </hudson.model.CauseAction>
+    <hudson.plugins.git.util.BuildData plugin="git@5.5.2">
+      <buildsByBranchName>
+        <entry>
+          <string>origin/master</string>
+          <hudson.plugins.git.util.Build>
+            <marked plugin="git-client@5.0.3">
+              <sha1>4563e08e775f14da3ffbc078928ba4335484c865</sha1>
+              <branches class="list">
+                <hudson.plugins.git.Branch>
+                  <sha1 reference="../../../sha1"/>
+                  <name>origin/master</name>
+                </hudson.plugins.git.Branch>
+              </branches>
+            </marked>
+            <revision reference="../marked"/>
+            <hudsonBuildNumber>1</hudsonBuildNumber>
+          </hudson.plugins.git.util.Build>
+        </entry>
+      </buildsByBranchName>
+      <lastBuild reference="../buildsByBranchName/entry/hudson.plugins.git.util.Build"/>
+      <remoteUrls>
+        <string>https://github.com/Tony-91/hello-world.git</string>
+      </remoteUrls>
+    </hudson.plugins.git.util.BuildData>
+    <org.jenkinsci.plugins.workflow.steps.scm.MultiSCMRevisionState plugin="workflow-scm-step@427.v4ca_6512e7df1">
+      <revisionStates>
+        <entry>
+          <string>git https://github.com/Tony-91/hello-world.git</string>
+          <hudson.scm.SCMRevisionState_-None/>
+        </entry>
+      </revisionStates>
+    </org.jenkinsci.plugins.workflow.steps.scm.MultiSCMRevisionState>
   </actions>
-  <queueId>1</queueId>
-  <timestamp>1764033205879</timestamp>
-  <startTime>1764033205889</startTime>
-  <result>SUCCESS</result>
-  <duration>38</duration>
+  <queueId>2</queueId>
+  <timestamp>1764036185185</timestamp>
+  <startTime>1764036185191</startTime>
+  <result>FAILURE</result>
+  <duration>13624</duration>
   <charset>UTF-8</charset>
   <keepLog>false</keepLog>
-  <builtOn></builtOn>
-  <workspace>/var/jenkins_home/workspace/hello-world-pipeline</workspace>
-  <hudsonVersion>2.462.3</hudsonVersion>
-  <scm class="hudson.scm.NullChangeLogParser"/>
-  <culprits class="java.util.Collections$UnmodifiableSet">
-    <c class="sorted-set"/>
-  </culprits>
-</build>
+  <completed>true</completed>
+  <checkouts class="hudson.util.PersistedList">
+    <org.jenkinsci.plugins.workflow.job.WorkflowRun_-SCMCheckout>
+      <scm class="hudson.plugins.git.GitSCM" plugin="git@5.5.2">
+        <configVersion>2</configVersion>
+        <userRemoteConfigs>
+          <hudson.plugins.git.UserRemoteConfig>
+            <url>https://github.com/Tony-91/hello-world.git</url>
+          </hudson.plugins.git.UserRemoteConfig>
+        </userRemoteConfigs>
+        <branches>
+          <hudson.plugins.git.BranchSpec>
+            <name>*/master</name>
+          </hudson.plugins.git.BranchSpec>
+          <hudson.plugins.git.BranchSpec>
+            <name>**</name>
+          </hudson.plugins.git.BranchSpec>
+        </branches>
+        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+        <submoduleCfg class="empty-list"/>
+        <extensions/>
+      </scm>
+      <node></node>
+      <workspace>/var/jenkins_home/workspace/hello-world-pipeline@script/d9e14b0c234f399605902bea2c7a0d2c3f04a77aa5169a9ee5b4e7866baa5946</workspace>
+      <changelogFile>/var/jenkins_home/jobs/hello-world-pipeline/builds/1/changelog11045270823369623552.xml</changelogFile>
+      <pollingBaseline class="hudson.scm.SCMRevisionState$None" reference="../../../actions/org.jenkinsci.plugins.workflow.steps.scm.MultiSCMRevisionState/revisionStates/entry/hudson.scm.SCMRevisionState_-None"/>
+    </org.jenkinsci.plugins.workflow.job.WorkflowRun_-SCMCheckout>
+  </checkouts>
+</flow-build>
