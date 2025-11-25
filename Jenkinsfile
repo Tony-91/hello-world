@@ -1,4 +1,5 @@
 // Load the shared library from our pipeline framework
+// Load the shared library from our pipeline framework
 @Library('green-pipes') _
 
 pipeline {
@@ -18,6 +19,20 @@ pipeline {
         timeout(time: 30, unit: 'MINUTES')
         disableConcurrentBuilds()
     }
+    agent any
+    
+    environment {
+        // Base workspace path
+        WORKSPACE_PATH = "${env.WORKSPACE}"
+        
+        // Docker settings
+        DOCKER_HOST = 'unix:///var/run/docker.sock'
+        DOCKER_TLS_CERTDIR = ''
+    }
+    
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timeout(time: 30, unit: 'MINUTES')
     
     stages {
         stage('Initialize') {
@@ -173,11 +188,6 @@ pipeline {
             sh 'docker logout'
         }
     }
-        }
-
-        stage('Build') {
-            steps {
-                script {
                     // Use the buildStages from our framework
                     buildStages.executeBuild('java')
                 }
