@@ -6,19 +6,26 @@ services:
     image: jenkins/jenkins:lts-jdk11
     container_name: jenkins
     user: root
-    ports:
-      - "9090:8080"
-      - "50001:50000"
+    environment:
+      - MAVEN_HOME=/usr/share/maven
+      - PATH=$PATH:/usr/share/maven/bin
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DOCKER_TLS_CERTDIR=""
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false -Duser.timezone=America/Los_Angeles
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /usr/local/bin/docker:/usr/bin/docker
       - ./jenkins_home:/var/jenkins_home
       - ./scripts:/var/jenkins_scripts
-    environment:
-      - DOCKER_HOST=unix:///var/run/docker.sock
-      - DOCKER_TLS_CERTDIR=""
-      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false -Duser.timezone=America/Los_Angeles
+      - maven-repo:/root/.m2
+    ports:
+      - "9090:8080"
+      - "50001:50000"
+    command: |
+      bash -c "apt-get update && \
+               apt-get install -y maven && \
+               /usr/local/bin/jenkins.sh"
     privileged: true
     networks:
       - ci-network
@@ -69,4 +76,5 @@ networks:
 volumes:
   jenkins_home:
   docker-graph:
+  maven-repo:
   portainer_data:

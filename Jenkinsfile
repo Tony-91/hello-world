@@ -60,35 +60,61 @@ pipeline {
         }
         
         stage('Build') {
+            agent {
+                docker {
+                    image 'maven:3.8.4-jdk-11'
+                    args '-v $HOME/.m2:/root/.m2'
+                    reuseNode true
+                }
+            }
             steps {
                 script {
                     echo "Building ${env.APP_NAME} v${env.APP_VERSION}"
                     echo "Docker Image: ${env.DOCKER_IMAGE}"
                     
                     // Build the application
-                    sh 'mvn clean package'
+                    sh 'mvn --version'
+                    sh 'mvn clean package -DskipTests'
                     
-                    // Build Docker image
-                    sh """
-                        docker build \
-                            -t ${env.DOCKER_IMAGE} \
-                            --build-arg JAR_FILE=target/*.jar \
-                            .
-                    """
+                    // Build Docker image using the host's Docker daemon
+                    withDockerContainer(args: '-v /var/run/docker.sock:/var/run/docker.sock', image: 'docker:20.10.16-dind') {
+                        sh """
+                            docker build \
+                                -t ${env.DOCKER_IMAGE} \
+                                --build-arg JAR_FILE=target/*.jar \
+                                .
+                        """
+                    }
                 }
             }
         }
         
         stage('Test') {
+            agent {
+                docker {
+                    image 'maven:3.8.4-jdk-11'
+                    args '-v $HOME/.m2:/root/.m2'
+                    reuseNode true
+                }
+            }
             steps {
-                echo "Running tests..."
-                sh 'mvn test'
-                
-                // Run any additional tests here
-                sh """
-                    echo 'Running container tests...'
-                    docker run --rm ${env.DOCKER_IMAGE} --version
-                """
+                script {
+                    echo "Running tests..."
+                    sh 'mvn test'
+                    
+                    // Run integration tests if any
+                    if (fileExists('src/test/integration')) {
+                        sh 'mvn verify -Pintegration-tests'
+                    }
+                    
+                    // Run container tests
+                    withDockerContainer(args: '-v /var/run/docker.sock:/var/run/docker.sock', image: 'docker:20.10.16-dind') {
+                        sh """
+                            echo 'Running container tests...'
+                            docker run --rm ${env.DOCKER_IMAGE} --version
+                        """
+                    }
+                }
             }
         }
         
