@@ -11,14 +11,19 @@ services:
       - "50001:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /usr/local/bin/docker:/usr/bin/docker
       - ./jenkins_home:/var/jenkins_home
       - ./scripts:/var/jenkins_scripts
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
-      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+      - DOCKER_TLS_CERTDIR=""
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false -Duser.timezone=America/Los_Angeles
+    privileged: true
     networks:
       - ci-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - docker-dind
 
