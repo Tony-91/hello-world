@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # Jenkins Master
+  jenkins:
+    image: jenkins/jenkins:lts-jdk11
+    container_name: jenkins
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./jenkins_home:/var/jenkins_home
+      - ./scripts:/var/jenkins_scripts
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+    networks:
+      - ci-network
+    depends_on:
+      - docker-dind
+
+  # Docker-in-Docker service
+  docker-dind:
+    image: docker:dind
+    container_name: docker-dind
+    privileged: true
+    environment:
+      - DOCKER_TLS_CERTDIR=""
+    volumes:
+      - docker-graph:/var/lib/docker
+    networks:
+      - ci-network
+
+  # Kubernetes CLI
+  kubectl:
+    image: rancher/k3d:latest
+    container_name: kubectl
+    volumes:
+      - ./kube:/root/.kube
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["sleep infinity"]
+    networks:
+      - ci-network
+
+  # Visualize containers (optional)
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - ci-network
+
+networks:
+  ci-network:
+    driver: bridge
+
+volumes:
+  jenkins_home:
+  docker-graph:
+  portainer_data:

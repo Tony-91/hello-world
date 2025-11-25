@@ -1,0 +1,38 @@
+application:
+  name: hello-world
+  type: java
+  version: 1.0.0
+
+build:
+  java:
+    build_command: mvn clean package -DskipTests
+    test_command: mvn test
+    artifact_path: "webapp/target/*.war"
+
+deployment:
+  type: container
+  target: kubernetes
+  environment: development
+  replicas: 1
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+docker:
+  registry: "your-docker-registry.com"
+  namespace: "hello-world"
+  base_image: "tomcat:9-jdk11-openjdk-slim"
+
+kubernetes:
+  service_port: 8080
+  target_port: 8080
+  service_type: ClusterIP
+  health_check_path: "/"
+
+notifications:
+  slack_channel: "#hello-world-deployments"
+  email: "dev-team@example.com"
