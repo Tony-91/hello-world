@@ -2,7 +2,7 @@
 @Library('green-pipes') _
 
 // Load pipeline configuration
-def config = readYaml file: 'pipeline-config.yaml'
+def config = readYaml file: "${env.WORKSPACE}/pipeline-config.yaml"
 
 // Set environment variables
 env.APP_NAME = config.application.name

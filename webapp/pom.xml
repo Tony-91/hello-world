@@ -20,24 +20,77 @@
 
     <plugins>
       <plugin>
-        <groupId>org.mortbay.jetty</groupId>
+        <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
+        <version>9.4.51.v20230217</version>
+        <configuration>
+          <webApp>
+            <contextPath>/</contextPath>
+            <descriptor>${project.basedir}/src/main/webapp/WEB-INF/web.xml</descriptor>
+          </webApp>
+          <httpConnector>
+            <port>8080</port>
+          </httpConnector>
+          <scanIntervalSeconds>5</scanIntervalSeconds>
+          <useTestScope>true</useTestScope>
+          <stopPort>8081</stopPort>
+          <stopKey>stop-jetty</stopKey>
+          <systemProperties>
+            <systemProperty>
+              <name>org.apache.jasper.compiler.disablejsr199</name>
+              <value>false</value>
+            </systemProperty>
+          </systemProperties>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>apache-jsp</artifactId>
+            <version>9.4.51.v20230217</version>
+          </dependency>
+          <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>apache-jstl</artifactId>
+            <version>9.4.51.v20230217</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
 
   <dependencies>
-
     <dependency>
       <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>4.0.1</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
+      <artifactId>javax.servlet.jsp-api</artifactId>
+      <version>2.3.3</version>
       <scope>provided</scope>
+    </dependency>
+    
+    <!-- JSTL for JSP -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>1.2</version>
+    </dependency>
+    
+    <!-- JSP Implementation -->
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>apache-jsp</artifactId>
+      <version>9.4.51.v20230217</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>apache-jstl</artifactId>
+      <version>9.4.51.v20230217</version>
     </dependency>
   </dependencies>
 
